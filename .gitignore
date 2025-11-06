@@ -1,0 +1,32 @@
+# Node
+node_modules/
+npm-debug.log*
+package-lock.json
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+pids/
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Docker
+docker-compose.override.yml
+*.local
+
+# Build
+dist/
+build/
+
+# Misc
+coverage/
+.nyc_output/

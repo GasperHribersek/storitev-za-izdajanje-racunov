@@ -4,3 +4,17 @@ CREATE TABLE users (
   email VARCHAR(100) UNIQUE,
   password VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS invoices (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  invoice_number VARCHAR(100) NOT NULL,
+  date DATE NOT NULL,
+  due_date DATE DEFAULT NULL,
+  client_name VARCHAR(255) DEFAULT NULL,
+  amount DECIMAL(12,2) DEFAULT 0.00,
+  description TEXT,
+  status VARCHAR(50) DEFAULT 'draft',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

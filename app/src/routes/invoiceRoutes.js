@@ -1,6 +1,22 @@
 const express = require('express');
 const router = express.Router();
-const { getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice } = require('../controllers/invoiceControllers');
+const { getNextInvoiceNumber, getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice } = require('../controllers/invoiceControllers');
+const { generateInvoicePDF, generateInvoiceCSV } = require('../controllers/pdfController');
+
+// GET next invoice number for logged-in user
+router.get('/next-number', (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ message: 'Not logged in' });
+  console.log('GET /api/invoices/next-number userId=', req.session.userId);
+  getNextInvoiceNumber(req.session.userId)
+    .then(nextNumber => {
+      console.log('Returning nextNumber=', nextNumber);
+      res.json({ nextNumber });
+    })
+    .catch(err => {
+      console.error('Error getting next invoice number:', err);
+      res.status(500).json({ message: 'Server error', error: err && err.message ? err.message : err });
+    });
+});
 
 // GET invoices for logged-in user
 router.get('/', (req, res) => {
@@ -17,12 +33,12 @@ router.post('/', (req, res) => {
   if (!userId) return res.status(401).json({ message: 'Not logged in - please login or provide user_id in request body (dev only)' });
   console.log('POST /api/invoices body=', req.body, 'userId=', userId);
   // Accept client_name and due_date from the form; if date is missing default to today
-  const { invoice_number, date, amount, description, due_date, client_name, client } = req.body;
+  const { invoice_number, date, amount, description, due_date, client_name, client, status } = req.body;
   const clientName = client_name || client || null;
   const useDate = date || new Date().toISOString().slice(0,10);
   // Basic validation
   if (!invoice_number || useDate == null || amount == null) return res.status(400).json({ message: 'Missing fields' });
-  const payload = { user_id: userId, invoice_number, date: useDate, due_date, client_name: clientName, amount, description };
+  const payload = { user_id: userId, invoice_number, date: useDate, due_date, client_name: clientName, amount, description, status };
   console.log('Creating invoice with payload=', payload);
   createInvoice(payload)
     .then(id => {
@@ -66,6 +82,22 @@ router.put('/:id', (req, res) => {
       console.error('Error updating invoice:', err);
       res.status(500).json({ message: 'Server error', error: err && err.message ? err.message : err });
     });
+});
+
+// GET download invoice as PDF
+router.get('/:id/pdf', (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ message: 'Not logged in' });
+  const id = req.params.id;
+  console.log('GET /api/invoices/' + id + '/pdf for user', req.session.userId);
+  generateInvoicePDF(id, res);
+});
+
+// GET download invoice as CSV
+router.get('/:id/csv', (req, res) => {
+  if (!req.session.userId) return res.status(401).json({ message: 'Not logged in' });
+  const id = req.params.id;
+  console.log('GET /api/invoices/' + id + '/csv for user', req.session.userId);
+  generateInvoiceCSV(id, res);
 });
 
 module.exports = router;

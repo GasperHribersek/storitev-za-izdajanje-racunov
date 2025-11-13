@@ -35,6 +35,20 @@
             <button id="addInvoiceBtn" class="btn-primary">Dodaj račun</button>
           </header>
 
+          <section class="filters-section">
+            <div class="filter-group">
+              <label for="statusFilter">Filtriraj po stanju:</label>
+              <select id="statusFilter">
+                <option value="">Vsi</option>
+                <option value="draft">Osnutek</option>
+                <option value="sent">Poslano</option>
+                <option value="paid">Plačano</option>
+                <option value="overdue">Prekoračeno</option>
+                <option value="cancelled">Odpoklicano</option>
+              </select>
+            </div>
+          </section>
+
           <section class="table-wrap">
             <table class="invoices-table">
               <thead>
@@ -45,6 +59,7 @@
                   <th>saldo</th>
                   <th>datum</th>
                   <th>rok plačila</th>
+                  <th>PDF</th>
                   <th>izbriši</th>
                   <th>uredi</th>
                 </tr>
@@ -75,6 +90,18 @@
           <div class="modal-row" style="margin-top:12px;">
             <div class="col"><label>Rok plačila</label></div>
             <div><input name="due_date" type="date" /></div>
+          </div>
+          <div class="modal-row" style="margin-top:12px;">
+            <div class="col"><label>Stanje</label></div>
+            <div style="width:160px">
+              <select name="status">
+                <option value="draft">Osnutek</option>
+                <option value="sent">Poslano</option>
+                <option value="paid">Plačano</option>
+                <option value="overdue">Prekoračeno</option>
+                <option value="cancelled">Odpoklicano</option>
+              </select>
+            </div>
           </div>
           <div style="margin-top:12px;">
             <textarea name="description" placeholder="Opis"></textarea>

@@ -88,10 +88,38 @@
   font-weight: 600;
 }
 
-/* Chart placeholder */
-canvas {
-  width: 100% !important;
-  height: 250px !important;
+/* Dashboard page specific styles */
+
+.invoices-page {
+  padding: 24px;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin: 10px 0;
+}
+
+.nav-item a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 8px;
+  display: block;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.nav-item a:hover {
+  background-color: #374151;
+}
+
+.nav-item a.active {
+  font-weight: 700;
+  background: #111827;
 }
 
 /* Responsive */

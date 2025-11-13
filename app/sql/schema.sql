@@ -5,6 +5,13 @@ CREATE TABLE users (
   password VARCHAR(255)
 );
 
+CREATE TABLE IF NOT EXISTS invoice_sequences (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  next_number INT DEFAULT 1,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS invoices (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,

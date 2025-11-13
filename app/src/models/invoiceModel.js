@@ -1,5 +1,47 @@
 const { pool } = require('../../config/db');
 
+function getNextInvoiceNumber(userId) {
+  return new Promise((resolve, reject) => {
+    // Try to get existing sequence
+    pool.query(
+      'SELECT next_number FROM invoice_sequences WHERE user_id = ?',
+      [userId],
+      (err, results) => {
+        if (err) return reject(err);
+        
+        console.log('invoiceModel.getNextInvoiceNumber userId=', userId, 'results=', results);
+        
+        if (results.length > 0) {
+          // Sequence exists, increment it
+          const nextNum = results[0].next_number;
+          console.log('Found existing sequence, nextNum=', nextNum);
+          pool.query(
+            'UPDATE invoice_sequences SET next_number = next_number + 1 WHERE user_id = ?',
+            [userId],
+            (err) => {
+              if (err) return reject(err);
+              console.log('Updated sequence, returning', nextNum);
+              resolve(`${nextNum}`);
+            }
+          );
+        } else {
+          // Create new sequence starting at 1
+          console.log('Creating new sequence for userId=', userId);
+          pool.query(
+            'INSERT INTO invoice_sequences (user_id, next_number) VALUES (?, 2)',
+            [userId],
+            (err) => {
+              if (err) return reject(err);
+              console.log('Created new sequence, returning 1');
+              resolve('1');
+            }
+          );
+        }
+      }
+    );
+  });
+}
+
 function getInvoicesByUser(userId) {
   return new Promise((resolve, reject) => {
     pool.query(
@@ -47,4 +89,4 @@ function updateInvoice({ id, invoice_number, date, amount, description, due_date
   });
 }
 
-module.exports = { getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice };
+module.exports = { getNextInvoiceNumber, getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice };

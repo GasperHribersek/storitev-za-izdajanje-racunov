@@ -1,5 +1,9 @@
 const Invoice = require('../models/invoiceModel');
 
+function getNextInvoiceNumber(userId) {
+	return Invoice.getNextInvoiceNumber(userId);
+}
+
 function getInvoicesByUser(userId) {
 	// delegate to the model which returns a promise
 	return Invoice.getInvoicesByUser(userId);
@@ -18,4 +22,4 @@ function updateInvoice(data) {
 	return Invoice.updateInvoice(data);
 }
 
-module.exports = { getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice };
+module.exports = { getNextInvoiceNumber, getInvoicesByUser, createInvoice, deleteInvoice, updateInvoice };

@@ -11,7 +11,24 @@ function connectDB() {
   pool.getConnection((err, conn) => {
     if (err) throw err;
     console.log('✅ MySQL Connected');
-    conn.release();
+    // Ensure invoices table exists (safe to run on startup)
+    const createInvoices = `
+      CREATE TABLE IF NOT EXISTS invoices (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        invoice_number VARCHAR(100) NOT NULL,
+        date DATE NOT NULL,
+        due_date DATE DEFAULT NULL,
+        amount DECIMAL(12,2) DEFAULT 0.00,
+        description TEXT,
+        status VARCHAR(50) DEFAULT 'draft',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    conn.query(createInvoices, (err) => {
+      if (err) console.error('Error ensuring invoices table exists:', err);
+      conn.release();
+    });
   });
 }
 

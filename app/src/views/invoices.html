@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <title>Računi</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/invoices.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar (copied from dashboard) -->
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Logo</h2>
+      </div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/dashboard.html">Nadzorna plošča</a></li>
+          <li class="nav-item"><a href="/invoices.html" class="active">Računi</a></li>
+          <li class="nav-item"><a href="/clients.html">Stranke</a></li>
+          <li class="nav-item"><a href="/products.html">Izdelki</a></li>
+          <li class="nav-item"><a href="/reports.html">Poročila</a></li>
+          <li class="nav-item"><a href="/export.html">Izvoz podatkov</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content invoices-page">
+      <div class="cards-container">
+        <div class="card">
+          <header class="page-header">
+            <h1>Računi</h1>
+            <button id="addInvoiceBtn" class="btn-primary">Dodaj račun</button>
+          </header>
+
+          <section class="table-wrap">
+            <table class="invoices-table">
+              <thead>
+                <tr>
+                  <th>stanje</th>
+                  <th>st.</th>
+                  <th>stranka</th>
+                  <th>saldo</th>
+                  <th>datum</th>
+                  <th>rok plačila</th>
+                  <th>izbriši</th>
+                  <th>uredi</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesTableBody">
+                <!-- Rows populated by js/invoices.js -->
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Add Invoice Modal -->
+    <div id="invoiceModal" class="modal" aria-hidden="true">
+      <div class="modal-backdrop"></div>
+      <div class="modal-card">
+        <h2>Dodaj račun</h2>
+        <form id="invoiceForm">
+          <div class="modal-row" style="margin-top:12px;">
+            <div class="col"><input name="invoice_number" placeholder="Št. računa" required /></div>
+            <div class="col"><input name="date" type="date" /></div>
+          </div>
+          <div class="modal-row" style="margin-top:12px;">
+            <div class="col"><input name="client" placeholder="Stranka" /></div>
+            <div style="width:160px"><input name="amount" type="number" step="0.01" placeholder="Znesek" required /></div>
+          </div>
+          <div class="modal-row" style="margin-top:12px;">
+            <div class="col"><label>Rok plačila</label></div>
+            <div><input name="due_date" type="date" /></div>
+          </div>
+          <div style="margin-top:12px;">
+            <textarea name="description" placeholder="Opis"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="cancelInvoice" class="btn-secondary">Prekliči</button>
+            <button type="submit" class="btn-primary">Shrani</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/invoices.js"></script>
+</body>
+</html>

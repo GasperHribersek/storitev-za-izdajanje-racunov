@@ -1,0 +1,81 @@
+/* Basic styles for invoices page to match wireframe */
+.invoices-page {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.btn-primary {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Use dashboard card/table styles; table-wrap provides inner padding */
+.table-wrap {
+  padding: 6px 0 0 0;
+}
+
+.invoices-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Let dashboard.card table styles apply; provide small tweaks if needed */
+.invoices-table thead th {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.invoices-table tbody td {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Keep sidebar and layout from dashboard.css for consistent look */
+.nav-list { list-style: none; padding: 0; margin: 0; }
+.nav-item { margin: 10px 0; }
+.nav-item a { color: #fff; text-decoration: none; padding: 10px 8px; display:block; border-radius:6px }
+.nav-item a.active { font-weight: 700; background: #111827 }
+
+/* Modal styles */
+.modal { display: none; position: fixed; inset: 0; align-items: center; justify-content: center; z-index: 1000; }
+.modal.show { display:flex; }
+.modal-backdrop { position:absolute; inset:0; background: rgba(0,0,0,0.45); }
+.modal-card { position:relative; background: #fff; padding: 20px; border-radius: 12px; width: 680px; max-width: 95%; z-index: 10; box-shadow: 0 10px 30px rgba(2,6,23,0.2); }
+.modal-card h2 { margin: 0 0 12px 0; }
+.modal-card form input,
+.modal-card form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+.modal-card form input[type="date"] { padding: 8px 10px; }
+.modal-row { display:flex; gap:12px; }
+.modal-row .col { flex:1 }
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:12px }
+
+.btn-small { padding:6px 8px; border-radius:6px; border:1px solid #e5e7eb; background:#fff }
+.btn-small { cursor: pointer; }
+

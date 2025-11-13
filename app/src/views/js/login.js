@@ -16,6 +16,7 @@ form.addEventListener('submit', async (e) => {
   alert(data.message);
 
   if (res.ok) {
-    window.location.href = '/index.html'; // redirect after successful login
+    // redirect to dashboard on successful login
+    window.location.href = '/dashboard.html';
   }
 });

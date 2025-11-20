@@ -13,10 +13,18 @@ form.addEventListener('submit', async (e) => {
   });
 
   const data = await res.json();
-  alert(data.message);
+  const msgEl = document.getElementById('loginMessage');
+  if (!msgEl) {
+    // fallback: if message container not present, use alert
+    alert(data.message);
+  } else {
+    msgEl.style.display = 'block';
+    msgEl.textContent = data.message || (res.ok ? 'Success' : 'Error');
+    msgEl.className = 'form-message ' + (res.ok ? 'success' : 'error');
+  }
 
   if (res.ok) {
-    // redirect to dashboard on successful login
-    window.location.href = '/dashboard.html';
+    // short delay so user can read the message then redirect
+    setTimeout(() => { window.location.href = '/dashboard.html'; }, 700);
   }
 });

@@ -80,3 +80,22 @@ body {
 .form-container .form-link a:hover {
   text-decoration: underline;
 }
+
+/* Inline message banner for forms (replaces alert popups) */
+.form-message {
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: block;
+}
+.form-message.success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+}
+.form-message.error {
+  background-color: #fff1f2;
+  color: #842029;
+  border: 1px solid #fecaca;
+}

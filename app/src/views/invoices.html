@@ -18,8 +18,9 @@
         <ul class="nav-list">
           <li class="nav-item"><a href="/dashboard.html">Nadzorna plošča</a></li>
           <li class="nav-item"><a href="/invoices.html" class="active">Računi</a></li>
+          <li class="nav-item"><a href="/services.html">Storitve</a></li>
+          <li class="nav-item"><a href="/products.html">Proizvodi</a></li>
           <li class="nav-item"><a href="/clients.html">Stranke</a></li>
-          <li class="nav-item"><a href="/products.html">Izdelki</a></li>
           <li class="nav-item"><a href="/reports.html">Poročila</a></li>
           <li class="nav-item"><a href="/export.html">Izvoz podatkov</a></li>
         </ul>
@@ -84,8 +85,16 @@
             <div class="col"><input name="date" type="date" /></div>
           </div>
           <div class="modal-row" style="margin-top:12px;">
-            <div class="col"><input name="client" placeholder="Stranka" /></div>
-            <div style="width:160px"><input name="amount" type="number" step="0.01" placeholder="Znesek" required /></div>
+            <div class="col">
+              <label for="clientSelect">Stranka</label>
+              <select id="clientSelect" name="client_id">
+                <option value="">-- Izberite stranko ali vnesite ime --</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-row" style="margin-top:12px;">
+            <div class="col"><input id="clientNameInput" name="client" placeholder="Ali vnesite ime stranke ročno" /></div>
+            <div style="width:160px"><input name="amount" type="number" step="0.01" placeholder="Znesek" required readonly /></div>
           </div>
           <div class="modal-row" style="margin-top:12px;">
             <div class="col"><label>Rok plačila</label></div>
@@ -103,8 +112,56 @@
               </select>
             </div>
           </div>
+          
+          <!-- Items section -->
+          <div style="margin-top:20px;border-top:1px solid #e5e7eb;padding-top:16px;">
+            <h3 style="margin:0 0 12px 0;font-size:16px;color:#111827;">Postavke računa</h3>
+            <div class="modal-row" style="margin-top:12px;align-items:flex-end;gap:12px;">
+              <div class="col">
+                <label for="serviceSelect">Dodaj storitev</label>
+                <select id="serviceSelect">
+                  <option value="">-- Izberite storitev --</option>
+                </select>
+              </div>
+              <button type="button" id="addServiceBtn" class="btn-primary" style="height:40px;padding:0 16px;">Dodaj</button>
+            </div>
+            <div class="modal-row" style="margin-top:12px;align-items:flex-end;gap:12px;">
+              <div class="col">
+                <label for="productSelect">Dodaj proizvod</label>
+                <select id="productSelect">
+                  <option value="">-- Izberite proizvod --</option>
+                </select>
+              </div>
+              <button type="button" id="addProductBtn" class="btn-primary" style="height:40px;padding:0 16px;">Dodaj</button>
+            </div>
+            
+            <!-- Items list table -->
+            <div id="itemsListContainer" style="margin-top:16px;display:none;">
+              <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                <thead>
+                  <tr style="background:#f9fafb;">
+                    <th style="padding:8px;text-align:left;border:1px solid #e5e7eb;">Naziv</th>
+                    <th style="padding:8px;text-align:right;border:1px solid #e5e7eb;width:100px;">Cena (€)</th>
+                    <th style="padding:8px;text-align:center;border:1px solid #e5e7eb;width:60px;">Izbriši</th>
+                  </tr>
+                </thead>
+                <tbody id="itemsListBody">
+                  <!-- Items added dynamically -->
+                </tbody>
+                <tfoot>
+                  <tr style="background:#f3f4f6;font-weight:600;">
+                    <td style="padding:8px;border:1px solid #e5e7eb;">Skupaj</td>
+                    <td id="itemsTotal" style="padding:8px;text-align:right;border:1px solid #e5e7eb;">0.00 €</td>
+                    <td style="border:1px solid #e5e7eb;"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+          
           <div style="margin-top:12px;">
-            <textarea name="description" placeholder="Opis"></textarea>
+            <label>Opis / Opombe</label>
+            <textarea name="description" placeholder="Opis" readonly style="background:#f9fafb;"></textarea>
           </div>
           <div class="modal-actions">
             <button type="button" id="cancelInvoice" class="btn-secondary">Prekliči</button>

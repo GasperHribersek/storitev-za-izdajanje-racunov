@@ -14,9 +14,16 @@ form.addEventListener('submit', async (e) => {
   });
 
   const data = await res.json();
-  alert(data.message);
+  const msgEl = document.getElementById('registerMessage');
+  if (!msgEl) {
+    alert(data.message);
+  } else {
+    msgEl.style.display = 'block';
+    msgEl.textContent = data.message || (res.ok ? 'Success' : 'Error');
+    msgEl.className = 'form-message ' + (res.ok ? 'success' : 'error');
+  }
 
   if (res.ok) {
-    window.location.href = '/login.html';
+    setTimeout(() => { window.location.href = '/login.html'; }, 700);
   }
 });

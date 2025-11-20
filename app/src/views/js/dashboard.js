@@ -1,3 +1,18 @@
+// Check authentication
+async function checkAuth() {
+  try {
+    const res = await fetch('/api/invoices');
+    if (res.status === 401) {
+      window.location.href = '/login.html';
+      return false;
+    }
+    return true;
+  } catch (err) {
+    window.location.href = '/login.html';
+    return false;
+  }
+}
+
 // Fetch invoices for logged-in user and populate the table
 async function loadInvoices() {
   try {
@@ -29,7 +44,12 @@ async function loadInvoices() {
 function updateChart(invoices) {
   const ctx = document.getElementById('invoiceChart').getContext('2d');
 
-  const labels = invoices.map(inv => inv.date);
+  const labels = invoices.map(inv => {
+    if (!inv.date) return '';
+    const d = new Date(inv.date);
+    if (isNaN(d)) return inv.date;
+    return d.toLocaleDateString('sl-SI', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  });
   const data = invoices.map(inv => inv.amount);
 
   new Chart(ctx, {
@@ -52,4 +72,9 @@ function updateChart(invoices) {
 }
 
 // Initialize dashboard
-window.addEventListener('DOMContentLoaded', loadInvoices);
+window.addEventListener('DOMContentLoaded', async () => {
+  const authenticated = await checkAuth();
+  if (authenticated) {
+    loadInvoices();
+  }
+});

@@ -24,6 +24,9 @@ connectDB();
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/invoices', require('./src/routes/invoiceRoutes'));
+app.use('/api/services', require('./src/routes/serviceRoutes'));
+app.use('/api/products', require('./src/routes/productRoutes'));
+app.use('/api/clients', require('./src/routes/clientRoutes'));
 
 
 // Simple test route to check session

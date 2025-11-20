@@ -1,0 +1,343 @@
+/* Services page specific styles - builds on dashboard.css */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 24px;
+}
+
+/* Table wrapper */
+.table-wrap {
+  padding: 6px 0 0 0;
+}
+
+/* Services table - inherits from dashboard.css .card table but adds specificity */
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table thead th {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+}
+
+.services-table tbody td {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-card {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 680px;
+  max-width: 95%;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+}
+
+.modal-card h2 {
+  margin: 0 0 12px 0;
+  color: #111827;
+  font-size: 18px;
+}
+
+.modal-card form input,
+.modal-card form textarea,
+.modal-card form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.modal-card form input[type="date"] {
+  padding: 8px 10px;
+}
+
+.modal-card form input:focus,
+.modal-card form textarea:focus,
+.modal-card form select:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.modal-row .col {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Button styles */
+.btn-primary {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #374151;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #f3f4f6;
+}
+
+.btn-small {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.btn-edit:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+/* Services page specific styles - builds on dashboard.css */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.page-header h1 {
+  margin: 0;
+  color: #111827;
+  font-size: 24px;
+}
+
+/* Table wrapper */
+.table-wrap {
+  padding: 6px 0 0 0;
+}
+
+/* Services table */
+.services-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.services-table thead th {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+  font-weight: 600;
+  text-align: left;
+}
+
+.services-table tbody td {
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+  word-break: break-word;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-card {
+  position: relative;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 95%;
+  z-index: 10;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+}
+
+.modal-card h2 {
+  margin: 0 0 12px 0;
+  color: #111827;
+  font-size: 18px;
+}
+
+.modal-card form input,
+.modal-card form textarea,
+.modal-card form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.modal-card form input:focus,
+.modal-card form textarea:focus,
+.modal-card form select:focus {
+  outline: none;
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.modal-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.modal-row .col {
+  flex: 1;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* Button styles */
+.btn-primary {
+  background: #111827;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #374151;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #f3f4f6;
+}
+
+.btn-small {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-small:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-delete:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.btn-edit:hover {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}

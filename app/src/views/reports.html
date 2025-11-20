@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <title>Poročila</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/reports.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="logo">
+        <h2>Logo</h2>
+      </div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/dashboard.html">Nadzorna plošča</a></li>
+          <li class="nav-item"><a href="/invoices.html">Računi</a></li>
+          <li class="nav-item"><a href="/services.html">Storitve</a></li>
+          <li class="nav-item"><a href="/products.html">Proizvodi</a></li>
+          <li class="nav-item"><a href="/clients.html">Stranke</a></li>
+          <li class="nav-item"><a href="/reports.html" class="active">Poročila</a></li>
+          <li class="nav-item"><a href="/export.html">Izvoz podatkov</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content reports-page">
+      <div class="cards-container">
+        <div class="card">
+          <header class="page-header">
+            <h1>Poročila</h1>
+          </header>
+
+          <!-- Report filters -->
+          <section class="report-filters">
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="reportType">Tip poročila:</label>
+                <select id="reportType">
+                  <option value="monthly">Mesečno</option>
+                  <option value="quarterly">Četrtletno</option>
+                  <option value="annual">Letno</option>
+                  <option value="custom">Po meri</option>
+                </select>
+              </div>
+
+              <div class="filter-group" id="monthFilterGroup">
+                <label for="reportMonth">Mesec:</label>
+                <select id="reportMonth">
+                  <option value="1">Januar</option>
+                  <option value="2">Februar</option>
+                  <option value="3">Marec</option>
+                  <option value="4">April</option>
+                  <option value="5">Maj</option>
+                  <option value="6">Junij</option>
+                  <option value="7">Julij</option>
+                  <option value="8">Avgust</option>
+                  <option value="9">September</option>
+                  <option value="10">Oktober</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+              </div>
+
+              <div class="filter-group" id="quarterFilterGroup" style="display:none;">
+                <label for="reportQuarter">Četrtletje:</label>
+                <select id="reportQuarter">
+                  <option value="1">Q1 (Jan-Mar)</option>
+                  <option value="2">Q2 (Apr-Jun)</option>
+                  <option value="3">Q3 (Jul-Sep)</option>
+                  <option value="4">Q4 (Oct-Dec)</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="reportYear">Leto:</label>
+                <input type="number" id="reportYear" min="2020" max="2099" />
+              </div>
+            </div>
+
+            <div class="filter-row" id="customDateRange" style="display:none;">
+              <div class="filter-group">
+                <label for="dateFrom">Od:</label>
+                <input type="date" id="dateFrom" />
+              </div>
+              <div class="filter-group">
+                <label for="dateTo">Do:</label>
+                <input type="date" id="dateTo" />
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <div class="filter-group">
+                <label for="statusFilterReport">Stanje:</label>
+                <select id="statusFilterReport">
+                  <option value="">Vsi</option>
+                  <option value="draft">Osnutek</option>
+                  <option value="sent">Poslano</option>
+                  <option value="paid">Plačano</option>
+                  <option value="overdue">Prekoračeno</option>
+                  <option value="cancelled">Odpoklicano</option>
+                </select>
+              </div>
+              <button id="generateReportBtn" class="btn-primary">Generiraj poročilo</button>
+            </div>
+          </section>
+
+          <!-- Report summary -->
+          <section id="reportSummary" class="report-summary" style="display:none;">
+            <h2>Povzetek</h2>
+            <div class="summary-grid">
+              <div class="summary-card">
+                <div class="summary-label">Število računov</div>
+                <div class="summary-value" id="summaryCount">0</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Skupni znesek</div>
+                <div class="summary-value" id="summaryTotal">0.00 €</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Plačano</div>
+                <div class="summary-value" id="summaryPaid">0.00 €</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Neporavnano</div>
+                <div class="summary-value" id="summaryUnpaid">0.00 €</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Report table -->
+          <section id="reportTableSection" class="table-wrap" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <h2 style="margin:0;font-size:18px;">Računi</h2>
+              <button id="exportReportBtn" class="btn-secondary">Izvozi CSV</button>
+            </div>
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Št.</th>
+                  <th>Datum</th>
+                  <th>Stranka</th>
+                  <th>Znesek</th>
+                  <th>Stanje</th>
+                  <th>Rok plačila</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody">
+                <!-- Rows populated by js -->
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/reports.js"></script>
+</body>
+</html>

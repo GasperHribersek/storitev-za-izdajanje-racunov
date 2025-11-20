@@ -1,4 +1,4 @@
-/* Invoices page specific styles - builds on dashboard.css */
+/* Clients page specific styles - builds on dashboard.css */
 
 .page-header {
   display: flex;
@@ -13,49 +13,18 @@
   font-size: 24px;
 }
 
-/* Filter section */
-.filters-section {
-  margin-bottom: 16px;
-  padding: 12px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.filter-group label {
-  font-weight: 500;
-  color: #374151;
-  white-space: nowrap;
-}
-
-.filter-group select {
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  background-color: #fff;
-  cursor: pointer;
-  min-width: 160px;
-}
-
 /* Table wrapper */
 .table-wrap {
   padding: 6px 0 0 0;
 }
 
-/* Invoices table - inherits from dashboard.css .card table but adds specificity */
-.invoices-table {
+/* Clients table */
+.clients-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.invoices-table thead th {
+.clients-table thead th {
   padding: 10px;
   border: 1px solid #e5e7eb;
   background-color: #f9fafb;
@@ -63,10 +32,11 @@
   text-align: left;
 }
 
-.invoices-table tbody td {
+.clients-table tbody td {
   padding: 10px;
   border: 1px solid #e5e7eb;
   text-align: left;
+  word-break: break-word;
 }
 
 /* Modal styles */
@@ -94,7 +64,7 @@
   background: #fff;
   padding: 20px;
   border-radius: 12px;
-  width: 680px;
+  width: 600px;
   max-width: 95%;
   max-height: 90vh;
   overflow-y: auto;
@@ -117,10 +87,6 @@
   border: 1px solid #e5e7eb;
   font-size: 14px;
   font-family: inherit;
-}
-
-.modal-card form input[type="date"] {
-  padding: 8px 10px;
 }
 
 .modal-card form input:focus,
@@ -204,16 +170,3 @@
   border-color: #93c5fd;
   color: #1e40af;
 }
-
-.btn-pdf:hover {
-  background: #dcfce7;
-  border-color: #86efac;
-  color: #15803d;
-}
-
-.btn-csv:hover {
-  background: #fff7ed;
-  border-color: #ffd8a8;
-  color: #92400e;
-}
-

@@ -1,9 +1,34 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Check authentication first
+  try {
+    const authCheck = await fetch('/api/invoices');
+    if (authCheck.status === 401) {
+      window.location.href = '/login.html';
+      return;
+    }
+  } catch (err) {
+    window.location.href = '/login.html';
+    return;
+  }
+
   const tbody = document.getElementById('invoicesTableBody');
   const addBtn = document.getElementById('addInvoiceBtn');
   const statusFilter = document.getElementById('statusFilter');
+  const serviceSelect = document.getElementById('serviceSelect');
+  const addServiceBtn = document.getElementById('addServiceBtn');
+  const productSelect = document.getElementById('productSelect');
+  const addProductBtn = document.getElementById('addProductBtn');
+  const clientSelect = document.getElementById('clientSelect');
+  const clientNameInput = document.getElementById('clientNameInput');
+  const itemsListContainer = document.getElementById('itemsListContainer');
+  const itemsListBody = document.getElementById('itemsListBody');
+  const itemsTotal = document.getElementById('itemsTotal');
 
   let allInvoices = []; // Store all invoices for filtering
+  let allServices = []; // Store all services for selection
+  let allProducts = []; // Store all products for selection
+  let allClients = []; // Store all clients for selection
+  let invoiceItems = []; // Store items added to current invoice
 
   addBtn.addEventListener('click', () => {
     openModal();
@@ -75,6 +100,73 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Fetch services and populate dropdown
+  async function loadServices() {
+    try {
+      const res = await fetch('/api/services');
+      if (!res.ok) {
+        console.warn('Could not load services');
+        return;
+      }
+      const services = await res.json();
+      allServices = services;
+      serviceSelect.innerHTML = '<option value="">-- Izberite storitev --</option>';
+      services.forEach(svc => {
+        const opt = document.createElement('option');
+        opt.value = svc.id;
+        opt.textContent = `${svc.name} (${parseFloat(svc.amount).toFixed(2)} €)`;
+        serviceSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error('Error loading services:', err);
+    }
+  }
+
+  // Fetch products and populate dropdown
+  async function loadProducts() {
+    try {
+      const res = await fetch('/api/products');
+      if (!res.ok) {
+        console.warn('Could not load products');
+        return;
+      }
+      const products = await res.json();
+      allProducts = products;
+      productSelect.innerHTML = '<option value="">-- Izberite proizvod --</option>';
+      products.forEach(prod => {
+        const opt = document.createElement('option');
+        opt.value = prod.id;
+        opt.textContent = `${prod.name} (${parseFloat(prod.price).toFixed(2)} €)`;
+        productSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error('Error loading products:', err);
+    }
+  }
+
+  // Fetch clients and populate dropdown
+  async function loadClients() {
+    try {
+      const res = await fetch('/api/clients');
+      if (!res.ok) {
+        console.warn('Could not load clients');
+        return;
+      }
+      const clients = await res.json();
+      allClients = clients;
+      clientSelect.innerHTML = '<option value="">-- Izberite stranko ali vnesite ime --</option>';
+      clients.forEach(client => {
+        const opt = document.createElement('option');
+        opt.value = client.id;
+        opt.textContent = client.name;
+        opt.dataset.name = client.name;
+        clientSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.error('Error loading clients:', err);
+    }
+  }
+
   function formatDate(d) {
     const dt = new Date(d);
     if (isNaN(dt)) return '';
@@ -92,6 +184,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   loadInvoices();
+  loadServices();
+  loadProducts();
+  loadClients();
+  
+  // Client select change handler
+  clientSelect.addEventListener('change', () => {
+    const selectedOption = clientSelect.options[clientSelect.selectedIndex];
+    if (selectedOption.value) {
+      clientNameInput.value = selectedOption.dataset.name || selectedOption.textContent;
+    }
+  });
   
   // Filter change listener
   statusFilter.addEventListener('change', applyFilter);
@@ -157,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.setAttribute('aria-hidden','true');
     invoiceForm.reset();
     setEditMode(null);
+    invoiceItems = []; // Clear items list
+    renderInvoiceItems();
   }
 
   function toInputDate(displayDate) {
@@ -170,6 +275,81 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   cancelBtn.addEventListener('click', closeModal);
+
+  // Add item to invoice
+  function addItemToInvoice(name, price) {
+    invoiceItems.push({ name, price: parseFloat(price) });
+    renderInvoiceItems();
+    updateInvoiceTotals();
+  }
+
+  // Render items list
+  function renderInvoiceItems() {
+    if (invoiceItems.length === 0) {
+      itemsListContainer.style.display = 'none';
+      return;
+    }
+    
+    itemsListContainer.style.display = 'block';
+    itemsListBody.innerHTML = invoiceItems.map((item, index) => `
+      <tr>
+        <td style="padding:8px;border:1px solid #e5e7eb;">${escapeHtml(item.name)}</td>
+        <td style="padding:8px;text-align:right;border:1px solid #e5e7eb;">${item.price.toFixed(2)}</td>
+        <td style="padding:8px;text-align:center;border:1px solid #e5e7eb;">
+          <button type="button" class="btn-small btn-delete" data-index="${index}">×</button>
+        </td>
+      </tr>
+    `).join('');
+    
+    // Add event listeners for delete buttons
+    itemsListBody.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        invoiceItems.splice(index, 1);
+        renderInvoiceItems();
+        updateInvoiceTotals();
+      });
+    });
+  }
+
+  // Update totals and description
+  function updateInvoiceTotals() {
+    const total = invoiceItems.reduce((sum, item) => sum + item.price, 0);
+    itemsTotal.textContent = total.toFixed(2) + ' €';
+    invoiceForm.elements['amount'].value = total.toFixed(2);
+    
+    // Build description from all item names
+    const description = invoiceItems.map(item => item.name).join(', ');
+    invoiceForm.elements['description'].value = description;
+  }
+
+  // Add service to invoice
+  addServiceBtn.addEventListener('click', () => {
+    const serviceId = serviceSelect.value;
+    if (!serviceId) {
+      alert('Izberite storitev');
+      return;
+    }
+    const service = allServices.find(s => s.id == serviceId);
+    if (service) {
+      addItemToInvoice(service.name, service.amount);
+      serviceSelect.value = '';
+    }
+  });
+
+  // Add product to invoice
+  addProductBtn.addEventListener('click', () => {
+    const productId = productSelect.value;
+    if (!productId) {
+      alert('Izberite proizvod');
+      return;
+    }
+    const product = allProducts.find(p => p.id == productId);
+    if (product) {
+      addItemToInvoice(product.name, product.price);
+      productSelect.value = '';
+    }
+  });
 
   // Event delegation on table body to ensure buttons work after re-render
   tbody.addEventListener('click', (e) => {

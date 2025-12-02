@@ -1,3 +1,13 @@
+// Logout function
+async function logout() {
+  try {
+    await fetch('/api/users/logout', { method: 'POST' });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
+  window.location.href = '/login.html';
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Check authentication first
   try {

@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt');
 
 async function registerUser(req, res) {
   const { name, email, password } = req.body;
+  
+  // Validate required fields
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Name, email, and password are required' });
+  }
+  
   try {
     const existing = await User.findByEmail(email);
     if (existing) return res.status(400).json({ message: 'Email already registered' });
@@ -22,6 +28,12 @@ async function registerUser(req, res) {
 
 async function loginUser(req, res) {
   const { email, password } = req.body;
+  
+  // Validate required fields
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+  
   try {
     const user = await User.findByEmail(email);
     if (!user) return res.status(400).json({ message: 'Invalid email or password' });

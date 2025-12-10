@@ -4,7 +4,7 @@
   "description": "",
   "main": "erver.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --coverage",
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
@@ -30,6 +30,10 @@
     "qrcode": "^1.5.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "@jest/globals": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   }
 }

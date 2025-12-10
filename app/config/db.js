@@ -8,6 +8,12 @@ const pool = mysql.createPool({
 });
 
 function connectDB() {
+  // Skip database connection in test environment
+  if (process.env.NODE_ENV === 'test') {
+    console.log('⚠️  Skipping database connection in test mode');
+    return;
+  }
+  
   pool.getConnection((err, conn) => {
     if (err) throw err;
     console.log('✅ MySQL Connected');

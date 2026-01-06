@@ -13,6 +13,10 @@ jobs:
     name: Backend Tests
     runs-on: ubuntu-latest
     
+    # Set explicit permissions for GITHUB_TOKEN
+    permissions:
+      contents: read
+    
     steps:
       # Step 1: Check out the repository code
       - name: Checkout code
@@ -49,6 +53,10 @@ jobs:
   frontend-tests:
     name: Frontend Tests
     runs-on: ubuntu-latest
+    
+    # Set explicit permissions for GITHUB_TOKEN
+    permissions:
+      contents: read
     
     steps:
       # Step 1: Check out the repository code

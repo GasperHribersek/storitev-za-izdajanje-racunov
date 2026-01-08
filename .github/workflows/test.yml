@@ -3,9 +3,9 @@ name: CI/CD Tests
 # Trigger the workflow on push and pull request events
 on:
   push:
-    branches: [ copilot/setup-ci-cd-pipeline, main ]
+    branches: [ actions-tests-reports, main, production ]
   pull_request:
-    branches: [ copilot/setup-ci-cd-pipeline, main ]
+    branches: [ actions-tests-reports, main, production ]
 
 jobs:
   # Backend testing job

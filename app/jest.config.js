@@ -10,7 +10,8 @@ module.exports = {
   // Files/paths to ignore from coverage (exclude DB and models until tested)
   coveragePathIgnorePatterns: [
     "<rootDir>/config/db.js",
-    "<rootDir>/src/models/"
+    "<rootDir>/src/models/clientModel.js",
+    "<rootDir>/src/models/userModel.js"
   ],
   
   // Coverage thresholds (optional)

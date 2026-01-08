@@ -1,3 +1,10 @@
+// Mock database config before any imports
+jest.mock('../../../config/db', () => ({
+  pool: {
+    query: jest.fn()
+  }
+}));
+
 const { registerUser, loginUser } = require('../../controllers/userController');
 const User = require('../../models/userModel');
 const bcrypt = require('bcrypt');

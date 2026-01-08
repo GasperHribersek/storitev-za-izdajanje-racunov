@@ -1,3 +1,10 @@
+// Mock database config before any imports
+jest.mock('../../../config/db', () => ({
+  pool: {
+    query: jest.fn()
+  }
+}));
+
 const {
   getAllClients,
   getClient,

@@ -1,0 +1,8 @@
+[build]
+# Use Dockerfile from app directory
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+# Working directory is the app folder
+workingDir = "app"

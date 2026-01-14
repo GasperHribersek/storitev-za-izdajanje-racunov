@@ -3,9 +3,9 @@ name: CI/CD Pipeline
 # Trigger on push to main and production branches
 on:
   push:
-    branches: [ main, production ]
+    branches: [ main, production,  logout-button]
   pull_request:
-    branches: [ main, production ]
+    branches: [ main, production,  logout-button ]
 
 env:
   DOCKER_IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/invoice-app

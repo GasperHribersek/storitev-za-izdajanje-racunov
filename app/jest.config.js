@@ -7,6 +7,14 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['html', 'json', 'text', 'lcov'],
 
+  collectCoverageFrom: [
+    'src/**/*. js',
+    '!src/models/**',      // Exclude models
+    '!src/views/**',       // Exclude views
+    '!src/tests/**',       // Exclude test files
+    '!**/node_modules/**'
+  ],
+
   // Files/paths to ignore from coverage (exclude DB and models until tested)
  coveragePathIgnorePatterns: [
     "/node_modules/",

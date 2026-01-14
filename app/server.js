@@ -9,6 +9,9 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+console.log('🚀 Starting application...');
+console.log('Environment:', process.env.NODE_ENV || 'development');
+
 const app = express();
 
 app.use(express.json());

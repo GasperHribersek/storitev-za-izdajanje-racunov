@@ -1,11 +1,14 @@
 const express = require('express');
 const path = require('path');
-const dotenv = require('dotenv');
 const session = require('express-session');  // <-- import
 const { connectDB } = require('./config/db');
 const userRoutes = require('./src/routes/userRoutes');
 
-dotenv.config();
+// Only load .env in development (Railway injects env vars directly in production)
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const app = express();
 
 app.use(express.json());

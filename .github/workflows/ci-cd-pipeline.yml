@@ -85,12 +85,92 @@ jobs:
           retention-days: 30
 
   # ===========================
-  # JOB 2: Build Application
+  # JOB 2: SonarCloud Analysis
+  # ===========================
+  sonarcloud:
+    name: SonarCloud Code Analysis
+    runs-on: ubuntu-latest
+    needs: test
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for better analysis
+          fetch-depth: 0
+      
+      # Download test coverage from test job
+      - name: Download test coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: test-coverage
+          path: app/coverage/
+      
+      # Run SonarCloud analysis
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.verbose=true
+
+  # ===========================
+  # JOB 3: Check Quality Gates
+  # ===========================
+  quality-gate:
+    name: Check Quality Gates
+    runs-on: ubuntu-latest
+    needs: sonarcloud
+    
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Wait for SonarCloud to process the analysis
+      - name: Wait for Quality Gate
+        run: sleep 10
+      
+      # Check quality gate status using SonarCloud API
+      - name: Check Quality Gate Status
+        run: |
+          echo "Checking SonarCloud Quality Gate..."
+          
+          # Get project status from SonarCloud API
+          RESPONSE=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
+            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }}")
+          
+          echo "Quality Gate Response: $RESPONSE"
+          
+          # Extract quality gate status
+          STATUS=$(echo $RESPONSE | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+          
+          echo "Quality Gate Status: $STATUS"
+          
+          # Check if quality gate passed
+          if [ "$STATUS" != "OK" ]; then
+            echo "❌ Quality Gate FAILED!"
+            echo "Please check SonarCloud dashboard for details:"
+            echo "https://sonarcloud.io/dashboard?id=${{ secrets.SONAR_PROJECT_KEY }}"
+            exit 1
+          fi
+          
+          echo "✅ Quality Gate PASSED!"
+
+  # ===========================
+  # JOB 4: Build Application
   # ===========================
   build:
     name: Build Application
     runs-on: ubuntu-latest
-    needs: test
+    needs: quality-gate
     
     permissions:
       contents: read
@@ -142,7 +222,7 @@ jobs:
           retention-days: 7
 
   # ===========================
-  # JOB 3: Build and Push Docker Image
+  # JOB 5: Build and Push Docker Image
   # ===========================
   docker:
     name: Build & Push Docker Image
@@ -198,7 +278,7 @@ jobs:
         run: echo "Docker image built and pushed successfully!"
 
   # ===========================
-  # JOB 4: Deploy to GitHub Pages
+  # JOB 6: Deploy to GitHub Pages
   # ===========================
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -234,7 +314,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   # ===========================
-  # JOB 5: Deploy to Development Environment
+  # JOB 7: Deploy to Development Environment
   # ===========================
   deploy-development:
     name: Deploy to Development
@@ -272,7 +352,7 @@ jobs:
           echo "✅ Development environment is live"
 
   # ===========================
-  # JOB 6: Deploy to Production Environment
+  # JOB 8: Deploy to Production Environment
   # ===========================
   deploy-production:
     name: Deploy to Production

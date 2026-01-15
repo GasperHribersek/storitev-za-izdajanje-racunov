@@ -85,10 +85,10 @@ jobs:
           retention-days: 30
 
   # ===========================
-  # JOB 2: SonarCloud Analysis
+  # JOB 2: SonarCloud Analysis & Quality Gate
   # ===========================
   sonarcloud:
-    name: SonarCloud Code Analysis
+    name: SonarCloud Analysis & Quality Gate
     runs-on: ubuntu-latest
     needs: test
     
@@ -118,23 +118,8 @@ jobs:
         with:
           args: >
             -Dsonar.verbose=true
-
-  # ===========================
-  # JOB 3: Check Quality Gates
-  # ===========================
-  quality-gate:
-    name: Check Quality Gates
-    runs-on: ubuntu-latest
-    needs: sonarcloud
-    
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
       
-      # Use SonarQube Quality Gate check action
+      # Check Quality Gate (runs in same job, has access to .scannerwork)
       - name: SonarQube Quality Gate check
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
@@ -144,12 +129,12 @@ jobs:
           scanMetadataReportFile: .scannerwork/report-task.txt
 
   # ===========================
-  # JOB 4: Build Application
+  # JOB 3: Build Application
   # ===========================
   build:
     name: Build Application
     runs-on: ubuntu-latest
-    needs: quality-gate
+    needs: sonarcloud
     
     permissions:
       contents: read
@@ -201,7 +186,7 @@ jobs:
           retention-days: 7
 
   # ===========================
-  # JOB 5: Build and Push Docker Image
+  # JOB 4: Build and Push Docker Image
   # ===========================
   docker:
     name: Build & Push Docker Image
@@ -257,7 +242,7 @@ jobs:
         run: echo "Docker image built and pushed successfully!"
 
   # ===========================
-  # JOB 6: Deploy to GitHub Pages
+  # JOB 5: Deploy to GitHub Pages
   # ===========================
   deploy-pages:
     name: Deploy to GitHub Pages
@@ -293,7 +278,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
   # ===========================
-  # JOB 7: Deploy to Development Environment
+  # JOB 6: Deploy to Development Environment
   # ===========================
   deploy-development:
     name: Deploy to Development
@@ -331,7 +316,7 @@ jobs:
           echo "✅ Development environment is live"
 
   # ===========================
-  # JOB 8: Deploy to Production Environment
+  # JOB 7: Deploy to Production Environment
   # ===========================
   deploy-production:
     name: Deploy to Production

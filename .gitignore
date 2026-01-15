@@ -29,4 +29,6 @@ build/
 
 # Misc
 coverage/
+coverage-backend/
+coverage-frontend/
 .nyc_output/

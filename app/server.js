@@ -1,11 +1,17 @@
 const express = require('express');
 const path = require('path');
-const dotenv = require('dotenv');
 const session = require('express-session');  // <-- import
 const { connectDB } = require('./config/db');
 const userRoutes = require('./src/routes/userRoutes');
 
-dotenv.config();
+// Only load .env in development (Railway injects env vars directly in production)
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
+console.log('🚀 Starting application...');
+console.log('Environment:', process.env.NODE_ENV || 'development');
+
 const app = express();
 
 app.use(express.json());
@@ -41,3 +47,5 @@ app.get('/dashboard', (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// new comment

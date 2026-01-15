@@ -1,5 +1,13 @@
 const mysql = require('mysql2');
 
+// Debug: Log environment variables
+console.log('=== DATABASE CONFIG ===');
+console.log('DB_HOST:', process.env.DB_HOST || 'NOT SET');
+console.log('DB_USER:', process.env.DB_USER || 'NOT SET');
+console.log('DB_NAME:', process.env.DB_NAME || 'NOT SET');
+console.log('NODE_ENV:', process.env.NODE_ENV || 'NOT SET');
+console.log('=====================');
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -11,6 +19,16 @@ function connectDB() {
   pool.getConnection((err, conn) => {
     if (err) throw err;
     console.log('✅ MySQL Connected');
+    
+    // IMPORTANT: Create users table FIRST (other tables reference it)
+    const createUsers = `
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(100) UNIQUE,
+        password VARCHAR(255)
+      );
+    `;
     
     // Ensure invoices table exists with all columns
     const createInvoices = `
@@ -81,21 +99,26 @@ function connectDB() {
       );
     `;
     
-    conn.query(createInvoices, (err) => {
-      if (err) console.error('Error ensuring invoices table exists:', err);
+    // Execute in correct order: users first, then tables with foreign keys
+    conn.query(createUsers, (err) => {
+      if (err) console.error('Error ensuring users table exists:', err);
       
-      conn.query(createSequences, (err) => {
-        if (err) console.error('Error ensuring invoice_sequences table exists:', err);
+      conn.query(createInvoices, (err) => {
+        if (err) console.error('Error ensuring invoices table exists:', err);
         
-        conn.query(createServices, (err) => {
-          if (err) console.error('Error ensuring services table exists:', err);
+        conn.query(createSequences, (err) => {
+          if (err) console.error('Error ensuring invoice_sequences table exists:', err);
           
-          conn.query(createProducts, (err) => {
-            if (err) console.error('Error ensuring products table exists:', err);
+          conn.query(createServices, (err) => {
+            if (err) console.error('Error ensuring services table exists:', err);
             
-            conn.query(createClients, (err) => {
-              if (err) console.error('Error ensuring clients table exists:', err);
-              conn.release();
+            conn.query(createProducts, (err) => {
+              if (err) console.error('Error ensuring products table exists:', err);
+              
+              conn.query(createClients, (err) => {
+                if (err) console.error('Error ensuring clients table exists:', err);
+                conn.release();
+              });
             });
           });
         });

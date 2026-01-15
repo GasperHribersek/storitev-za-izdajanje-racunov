@@ -1,6 +1,5 @@
 name: CI/CD Pipeline
 
-# Trigger on push to main and production branches
 on:
   push:
     branches: [ main, production, logout-button ]

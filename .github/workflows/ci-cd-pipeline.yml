@@ -294,7 +294,7 @@ jobs:
     
     environment:
       name: Development
-      url: https://your-app-dev.up.railway.app
+      url: https://storitev-za-izdajanje-racunov-production.up.railway.app/
     
     permissions:
       contents: read
@@ -315,9 +315,9 @@ jobs:
       
       - name: Deployment success
         run: |
-          echo "🚀 Successfully deployed to Development!"
-          echo "📦 Docker image: ${{ env.DOCKER_IMAGE_NAME }}:dev"
-          echo "✅ Development environment is live"
+          echo "Successfully deployed to Development!"
+          echo "Docker image: ${{ env.DOCKER_IMAGE_NAME }}:dev"
+          echo "Development environment is live"
 
   # ===========================
   # JOB 7: Deploy to Production Environment
@@ -332,7 +332,7 @@ jobs:
     
     environment:
       name: Production
-      url: https://your-app-prod.up.railway.app
+      url: https://storitev-za-izdajanje-racunov-production.up.railway.app/
     
     permissions:
       contents: read

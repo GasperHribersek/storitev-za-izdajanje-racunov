@@ -1,0 +1,122 @@
+name: CI/CD Tests
+
+# Trigger the workflow on push and pull request events
+on:
+  push:
+    branches: [ actions-tests-reports, main, production ]
+  pull_request:
+    branches: [ actions-tests-reports, main, production ]
+
+jobs:
+  # Backend testing job
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+    
+    # Set explicit permissions for GITHUB_TOKEN
+    permissions:
+      contents: read
+    
+    # MySQL service for backend tests
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: testpassword
+          MYSQL_DATABASE: test_invoice_app
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+      
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+      
+      # Step 4: Set up test database environment variables
+      - name: Set test environment variables
+        run: |
+          echo "DB_HOST=127.0.0.1" >> $GITHUB_ENV
+          echo "DB_USER=root" >> $GITHUB_ENV
+          echo "DB_PASS=testpassword" >> $GITHUB_ENV
+          echo "DB_NAME=test_invoice_app" >> $GITHUB_ENV
+          echo "PORT=5000" >> $GITHUB_ENV
+          echo "SESSION_SECRET=test_secret_key_for_testing" >> $GITHUB_ENV
+      
+      # Step 5: Run database migrations
+      - name: Run database migrations
+        working-directory: ./app
+        run: |
+          mysql -h 127.0.0.1 -u root -ptestpassword test_invoice_app < sql/schema.sql
+      
+      # Step 6: Run backend tests with coverage
+      - name: Run backend tests
+        working-directory: ./app
+        run: npm run test:backend -- --coverage --coverageDirectory=coverage-backend
+      
+      # Step 5: Upload backend coverage report as artifact
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: backend-coverage
+          path: app/coverage-backend/
+          retention-days: 90
+
+  # Frontend testing job
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    
+    # Set explicit permissions for GITHUB_TOKEN
+    permissions:
+      contents: read
+    
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+      
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+      
+      # Step 4: Run frontend tests with coverage
+      - name: Run frontend tests
+        working-directory: ./app
+        run: npm run test:frontend -- --coverage --coverageDirectory=coverage-frontend
+      
+      # Step 5: Upload frontend coverage report as artifact
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage
+          path: app/coverage-frontend/
+          retention-days: 90

@@ -134,35 +134,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      # Wait for SonarCloud to process the analysis
-      - name: Wait for Quality Gate
-        run: sleep 10
-      
-      # Check quality gate status using SonarCloud API
-      - name: Check Quality Gate Status
-        run: |
-          echo "Checking SonarCloud Quality Gate..."
-          
-          # Get project status from SonarCloud API
-          RESPONSE=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
-            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${{ secrets.SONAR_PROJECT_KEY }}")
-          
-          echo "Quality Gate Response: $RESPONSE"
-          
-          # Extract quality gate status
-          STATUS=$(echo $RESPONSE | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
-          
-          echo "Quality Gate Status: $STATUS"
-          
-          # Check if quality gate passed
-          if [ "$STATUS" != "OK" ]; then
-            echo "❌ Quality Gate FAILED!"
-            echo "Please check SonarCloud dashboard for details:"
-            echo "https://sonarcloud.io/dashboard?id=${{ secrets.SONAR_PROJECT_KEY }}"
-            exit 1
-          fi
-          
-          echo "✅ Quality Gate PASSED!"
+      # Use SonarQube Quality Gate check action
+      - name: SonarQube Quality Gate check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          scanMetadataReportFile: .scannerwork/report-task.txt
 
   # ===========================
   # JOB 4: Build Application
